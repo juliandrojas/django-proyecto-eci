@@ -1,0 +1,7 @@
+# CRUD CONTACTOS
+'''
+path('contact/create/', views.create_user, name='create_user'),
+path('contact/', views.read_user, name='read_user'),
+path('contact/<int:pk>/edit', views.update_user, name='update_user'),
+path('contact/<int:pk>/delete', views.delete_user, name='delete_user'),
+'''

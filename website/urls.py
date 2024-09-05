@@ -6,7 +6,8 @@ from .converters import FileNameConverter
 register_converter(FileNameConverter, 'filename')
 
 urlpatterns = [
-    path('', views.simple_upload, name='index'),
+    path('', views.index_eci, name='index'),
+    #path('', views.simple_upload, name='index'),
     path('download/<filename:filename>/', views.download_file, name='download_file'),
     # CRUD CONTACTOS
     path('contact/create/', views.create_user, name='create_user'),

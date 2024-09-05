@@ -7,6 +7,9 @@ from django.http import HttpResponseBadRequest, HttpResponse, Http404
 import os
 from urllib.parse import unquote
 from .forms import UserForm
+def index_eci(request): 
+    visible_users = User.objects.filter(visible=True)
+    return render(request, 'index.html', {'users': visible_users})
 def simple_upload(request):
     if request.method == 'POST':
         myfile = request.FILES.get('myfile')

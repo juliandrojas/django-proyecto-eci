@@ -22,40 +22,45 @@
     </header>
     <header>
       <!-- Navbar -->
-      <nav
-        class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-body"
-      >
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-body fixed-top">
         <div class="container-fluid">
           <a class="navbar-brand" href="#">
-            <img
-              src="../static/img/brand-img-without-background.png"
-              alt="Marca"
-              class="img-fluid w-25"
-            />
+            <img src="../static/img/brand-img-without-background.png" alt="Marca" class="img-fluid w-25">
           </a>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNavAltMarkup"
-            aria-controls="navbarNavAltMarkup"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav ms-auto mb-2 mb-lg-0">
-              <a class="nav-link active" aria-current="page" href="/">Inicio</a>
-              <a class="nav-link" href="#presentation">Sobre la revista</a>
-              <a class="nav-link" href="#team">Equipo editorial</a>
-              <a class="nav-link" href="#investigations">Investigaciones</a>
-              <a class="nav-link" href="#contact">Contacto</a>
-              <a class="nav-link" href="{% url 'read_user' %}">Gestión de contactos</a>
-            </div>
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Inicio</a></li>
+              <li class="nav-item"><a class="nav-link" href="#presentation">Sobre la revista</a></li>
+              <li class="nav-item"><a class="nav-link" href="#team">Equipo editorial</a></li>
+              <li class="nav-item"><a class="nav-link" href="#investigations">Investigaciones</a></li>
+              <li class="nav-item"><a class="nav-link" href="#contact">Contacto</a></li>
+              <li class="nav-item"><a class="nav-link" href="{% url 'read_user' %}">Gestión de contactos</a></li>
+            </ul>
           </div>
         </div>
       </nav>
+      <style>
+        .navbar {
+          padding: 0 1rem;
+        }
+      
+        .navbar-brand {
+          margin-right: 1rem;
+        }
+      
+        .navbar-nav {
+          justify-content: flex-end;
+        }
+      
+        @media (max-width: 768px) {
+          .navbar-nav {
+            justify-content: space-between;
+          }
+        }
+      </style>            
     </header>
     <!-- Main content -->
     <main>
@@ -75,74 +80,54 @@
           </div>
         </div>
       </div>
-      <section id="presentation">
-        <h1 class="text-center">Sobre la revista</h1>
-      </section>
-      <section id="team">
-        <h1 class="text-center">Equipo editorial</h1>
-      </section>
-      <section id="investigations">
-        <h1 class="text-center">Investigaciones</h1>
-      </section>
-      <section id="contact">
-        <h1 class="text-center">Contacto</h1>
-        <!-- <div class="container">
-          <div class="row">
-            <a href="/" class="btn btn-primary w-100">Añadir persona</a>
-
-          </div> -->
-        </div>
-      </section>
       <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <form method="post" enctype="multipart/form-data">
-              {% csrf_token %}
-              <input type="file" name="myfile" />
-              <button type="submit" class="btn btn-primary mt-2">
-                Subir archivo
-              </button>
-            </form>
-
-            <!-- Mostrar mensajes -->
-            {% if messages %}
-            <div class="alert alert-dismissible fade show mt-3" role="alert">
-              {% for message in messages %}
-              <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-              {% endfor %}
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="alert"
-                aria-label="Close"
-              ></button>
-            </div>
-            {% endif %} {% if uploaded_file_url %}
-            <p>
-              Archivo subido en:
-              <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a>
-            </p>
+        <section id="presentation">
+          <h1 class="text-center">Sobre la revista</h1>
+        </section>
+        <hr />
+        <section id="team">
+          <h1 class="text-center">Equipo editorial</h1>
+          <div class="container-fluid">
+            {% if users %}
+              <div class="row">
+                {% for user in users %}
+                  <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                    <div class="card">
+                      {% if user.img_profile_path %}
+                        <img src="{{ user.img_profile_path.url }}" class="card-img-top" alt="Foto del perfil de {{ user.username }}">
+                      {% else %}
+                        <img src="{{ STATIC_URL }}default_avatar.png" class="card-img-top" alt="Sin foto de perfil">
+                      {% endif %}
+                      <div class="card-body">
+                        <h2 class="text-center">{{ user.username }}</h2>
+                        <p><strong>Correo electrónico:</strong> {{ user.email }}</p>
+                        <p><strong>LinkedIn:</strong> <a href="{{ user.linkedin }}" target="_blank" rel="noopener noreferrer">{{ user.linkedin }}</a></p>
+                        <p><strong>ORCID:</strong> <a href="{{ user.orcid }}" target="_blank" rel="noopener noreferrer">{{ user.orcid }}</a></p>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <h1 class="text-center">No hay usuarios</h1>
             {% endif %}
-
-            <h2 class="mt-4">Archivos Subidos</h2>
-            <ul class="list-group">
-              {% for upload in uploads %}
-              <li
-                class="list-group-item d-flex justify-content-between align-items-center"
-              >
-                {{ upload.file_name }}
-                <a
-                  href="{% url 'download_file' upload.file_name|urlencode %}"
-                  class="btn btn-sm btn-secondary"
-                  >Descargar</a
-                >
-              </li>
-              {% empty %}
-              <li class="list-group-item">No hay archivos subidos.</li>
-              {% endfor %}
-            </ul>
           </div>
-        </div>
+          
+        </section>
+        <hr />
+        <section id="investigations">
+          <h1 class="text-center">Investigaciones</h1>
+        </section>
+        <hr />
+        <section id="contact">
+          <h1 class="text-center">Contacto</h1>
+          <!-- <div class="container">
+            <div class="row">
+              <a href="/" class="btn btn-primary w-100">Añadir persona</a>
+  
+            </div> -->
+          </div>
+        </section>
       </div>
     </main>
     <footer class="footer mt-auto py-3 bg-dark">
